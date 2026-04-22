@@ -2,6 +2,7 @@ import {
   addTransaction,
   getTransactions,
   getUserById,
+  getUsers,
   updateTransaction,
   updateUserBalance
 } from "../data/store.js";
@@ -25,8 +26,9 @@ export function listUsers() {
 }
 
 export function listDashboardData() {
-  return {
+  return {    
     users: ["usr_1", "usr_2", "usr_3"].map((id) => getUserById(id)).filter(Boolean),
+    users: getUsers(),
     transactions: getTransactions()
   };
 }
@@ -95,8 +97,10 @@ export function createTransfer({ senderId, receiverId, amount, currency = "USD" 
     })
   };
 }
-
 export function resolvePendingTransaction(transactionId, nextStatus) {
+  if (!["completed", "failed"].includes(nextStatus)) {
+    return { error: "Status must be completed or failed.", statusCode: 400 };
+  }
   const transaction = getTransactions().find((item) => item.id === transactionId);
 
   if (!transaction) {
