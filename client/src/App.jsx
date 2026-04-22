@@ -92,6 +92,9 @@ function App() {
   const pendingTransactions = dashboard.transactions.filter(
     (transaction) => transaction.status === "pending"
   );
+function getUserName(userId) {
+    return dashboard.users.find((user) => user.id === userId)?.name || userId;
+  }
 
   return (
     <div className="page-shell">
@@ -252,6 +255,10 @@ function App() {
                     </div>
                     <p>
                       {transaction.senderId} to {transaction.receiverId}
+                    </p>
+                   <p> 
+                     {getUserName(transaction.senderId)} to{" "}
+                      {getUserName(transaction.receiverId)}
                     </p>
                     <p>{formatDate(transaction.createdAt)}</p>
                     {transaction.fraudFlag ? <p>Fraud flag: Yes</p> : <p>Fraud flag: No</p>}
